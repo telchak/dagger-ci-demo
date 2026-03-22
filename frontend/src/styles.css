@@ -1,0 +1,737 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: #0f1117;
+  color: #e1e4e8;
+  min-height: 100vh;
+}
+
+/* ========== HEADER ========== */
+.app-header {
+  background: linear-gradient(135deg, #1a1d27 0%, #22262f 100%);
+  border-bottom: 1px solid #2d333b;
+  padding: 2rem 2rem 1.5rem;
+}
+
+.header-content {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.logo h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #f0f2f5;
+  letter-spacing: -0.02em;
+}
+
+.subtitle {
+  margin-top: 0.5rem;
+  color: #8b949e;
+  font-size: 0.9rem;
+}
+
+main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* ========== TOOLBAR & FILTERS ========== */
+.catalog-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #21262d;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.catalog-stats {
+  color: #8b949e;
+  font-size: 0.85rem;
+}
+
+.filter-bar {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.filter-btn {
+  background: #161b22;
+  border: 1px solid #30363d;
+  color: #8b949e;
+  padding: 0.35rem 0.75rem;
+  border-radius: 16px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: capitalize;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.filter-btn:hover {
+  border-color: #58a6ff;
+  color: #e1e4e8;
+}
+
+.filter-btn.active {
+  background: #58a6ff;
+  border-color: #58a6ff;
+  color: #0f1117;
+  font-weight: 600;
+}
+
+.filter-btn.active[data-category="build"] { background: #56d364; border-color: #56d364; }
+.filter-btn.active[data-category="infra"] { background: #58a6ff; border-color: #58a6ff; }
+.filter-btn.active[data-category="agent"] { background: #bc8cff; border-color: #bc8cff; }
+.filter-btn.active[data-category="utility"] { background: #d2a855; border-color: #d2a855; }
+
+/* ========== MODULE GRID ========== */
+.module-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1rem;
+}
+
+.module-card {
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 8px;
+  padding: 1.25rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+}
+
+.module-card:hover {
+  border-color: #58a6ff;
+  box-shadow: 0 0 0 1px #58a6ff22;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.module-name {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #58a6ff;
+  margin-bottom: 0.5rem;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+
+.module-description {
+  font-size: 0.875rem;
+  color: #8b949e;
+  line-height: 1.5;
+  flex: 1;
+}
+
+.card-footer {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #21262d;
+}
+
+/* ========== BADGES & TAGS ========== */
+.category-badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.2rem 0.6rem;
+  border-radius: 12px;
+  background: #21262d;
+  color: #8b949e;
+}
+
+.category-badge.lg { font-size: 0.75rem; padding: 0.25rem 0.75rem; }
+
+.category-badge[data-category="build"]   { background: #1b3a2d; color: #56d364; }
+.category-badge[data-category="deploy"]  { background: #341a2e; color: #db61a2; }
+.category-badge[data-category="infra"]   { background: #1c2d41; color: #58a6ff; }
+.category-badge[data-category="agent"]   { background: #2d1f3d; color: #bc8cff; }
+.category-badge[data-category="utility"] { background: #2b2a1a; color: #d2a855; }
+
+.version-tag {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #56d364;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  background: #1b3a2d;
+  padding: 0.1rem 0.45rem;
+  border-radius: 4px;
+}
+
+.version-tag.lg { font-size: 0.8rem; padding: 0.2rem 0.6rem; }
+
+.sdk-badge {
+  font-size: 0.65rem;
+  font-weight: 500;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  background: #21262d;
+  color: #7d8590;
+  font-family: "SFMono-Regular", Consolas, monospace;
+}
+
+.engine-tag, .dep-count {
+  font-size: 0.7rem;
+  color: #8b949e;
+  font-family: "SFMono-Regular", Consolas, monospace;
+}
+
+.dep-count { margin-left: auto; }
+
+/* ========== LOADING & ERROR ========== */
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 4rem 0;
+  color: #8b949e;
+}
+
+.loading-spinner.overlay {
+  position: fixed;
+  inset: 0;
+  background: #0f1117cc;
+  justify-content: center;
+  z-index: 100;
+}
+
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #30363d;
+  border-top-color: #58a6ff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.error-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  background: #3d1a1a;
+  border: 1px solid #5a2d2d;
+  border-radius: 8px;
+  color: #f85149;
+}
+
+.error-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #5a2d2d;
+  font-weight: 700;
+  font-size: 0.8rem;
+  flex-shrink: 0;
+}
+
+.empty-state {
+  color: #7d8590;
+  font-style: italic;
+  padding: 2rem;
+  text-align: center;
+}
+
+/* ========== DETAIL PANEL ========== */
+.detail-panel {
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.back-btn {
+  background: none;
+  border: 1px solid #30363d;
+  color: #58a6ff;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  margin-bottom: 1.5rem;
+  transition: background 0.15s;
+}
+
+.back-btn:hover { background: #161b22; }
+
+/* Hero */
+.detail-hero {
+  margin-bottom: 1.5rem;
+}
+
+.hero-top {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.75rem;
+}
+
+.detail-name {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #f0f2f5;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  margin-bottom: 0.5rem;
+}
+
+.detail-description {
+  font-size: 1rem;
+  color: #8b949e;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.detail-links {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.link-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.4rem 0.9rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+
+.github-link {
+  background: #21262d;
+  color: #e1e4e8;
+  border: 1px solid #30363d;
+}
+
+.github-link:hover { background: #30363d; }
+
+.daggerverse-link {
+  background: #1c2d41;
+  color: #58a6ff;
+  border: 1px solid #264773;
+}
+
+.daggerverse-link:hover { background: #264773; }
+
+/* ========== INSTALL BLOCK ========== */
+.install-block {
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+}
+
+.install-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 1rem;
+  background: #1c2024;
+  border-bottom: 1px solid #30363d;
+}
+
+.install-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #8b949e;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.copy-btn {
+  background: #21262d;
+  border: 1px solid #30363d;
+  color: #58a6ff;
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.copy-btn:hover { background: #30363d; }
+
+.install-code {
+  padding: 1rem;
+  margin: 0;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.9rem;
+  color: #79c0ff;
+  overflow-x: auto;
+}
+
+/* ========== META BAR ========== */
+.detail-meta {
+  display: flex;
+  gap: 2rem;
+  padding: 1rem 1.25rem;
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.meta-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #7d8590;
+}
+
+.meta-value {
+  font-size: 0.95rem;
+  color: #e1e4e8;
+  font-family: "SFMono-Regular", Consolas, monospace;
+}
+
+/* ========== TAB BAR ========== */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  border-bottom: 2px solid #21262d;
+  margin-bottom: 1.5rem;
+}
+
+.tab-btn {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: #8b949e;
+  padding: 0.75rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  margin-bottom: -2px;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tab-btn:hover { color: #e1e4e8; }
+
+.tab-btn.active {
+  color: #58a6ff;
+  border-bottom-color: #58a6ff;
+  font-weight: 600;
+}
+
+.tab-count {
+  font-size: 0.7rem;
+  background: #21262d;
+  color: #8b949e;
+  padding: 0.1rem 0.45rem;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.tab-btn.active .tab-count {
+  background: #1c2d41;
+  color: #58a6ff;
+}
+
+.tab-content {
+  animation: fadeIn 0.15s ease;
+}
+
+/* ========== FUNCTIONS (Inputs tab) ========== */
+.fn-card {
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 8px;
+  margin-bottom: 0.75rem;
+  overflow: hidden;
+  transition: border-color 0.15s;
+}
+
+.fn-card:hover { border-color: #484f58; }
+.fn-card.expanded { border-color: #58a6ff; }
+
+.fn-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.9rem 1.1rem;
+  cursor: pointer;
+  gap: 1rem;
+}
+
+.fn-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.fn-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #79c0ff;
+  font-family: "SFMono-Regular", Consolas, monospace;
+}
+
+.fn-badge {
+  font-size: 0.6rem;
+  font-weight: 600;
+  padding: 0.1rem 0.45rem;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.check-badge { background: #2b3a1d; color: #7ee787; }
+.async-badge { background: #2d1f3d; color: #bc8cff; }
+
+.fn-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.fn-return {
+  font-size: 0.75rem;
+  color: #7d8590;
+  font-family: "SFMono-Regular", Consolas, monospace;
+}
+
+.fn-param-count {
+  font-size: 0.7rem;
+  color: #7d8590;
+}
+
+.fn-chevron {
+  font-size: 0.6rem;
+  color: #484f58;
+}
+
+.fn-desc-preview {
+  padding: 0 1.1rem 0.75rem;
+  font-size: 0.8rem;
+  color: #7d8590;
+  line-height: 1.4;
+}
+
+.fn-detail {
+  border-top: 1px solid #21262d;
+  padding: 1.1rem;
+}
+
+.fn-description {
+  font-size: 0.875rem;
+  color: #c9d1d9;
+  line-height: 1.6;
+  margin-bottom: 1.25rem;
+  white-space: pre-wrap;
+}
+
+/* ========== PARAMS TABLE ========== */
+.params-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+
+.params-table th {
+  text-align: left;
+  padding: 0.6rem 0.75rem;
+  color: #7d8590;
+  font-weight: 600;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid #30363d;
+  background: #1c2024;
+}
+
+.params-table td {
+  padding: 0.65rem 0.75rem;
+  border-bottom: 1px solid #21262d;
+  vertical-align: top;
+}
+
+.params-table tr:last-child td { border-bottom: none; }
+
+.param-name-cell code {
+  color: #79c0ff;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.param-type-cell code {
+  color: #d2a855;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 0.75rem;
+  background: #2b2a1a;
+  padding: 0.1rem 0.35rem;
+  border-radius: 3px;
+}
+
+.param-desc-cell {
+  color: #c9d1d9;
+  line-height: 1.4;
+  max-width: 300px;
+}
+
+.param-req-cell { white-space: nowrap; }
+
+.required-badge {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: #f85149;
+  background: #3d1a1a;
+  padding: 0.1rem 0.4rem;
+  border-radius: 3px;
+}
+
+.optional-badge {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: #7d8590;
+  background: #21262d;
+  padding: 0.1rem 0.4rem;
+  border-radius: 3px;
+}
+
+.param-default-cell code {
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 0.75rem;
+  color: #7ee787;
+  background: #1b3a2d;
+  padding: 0.1rem 0.35rem;
+  border-radius: 3px;
+}
+
+.no-default { color: #484f58; }
+
+/* ========== DEPENDENCIES ========== */
+.dep-list { list-style: none; }
+
+.dep-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.65rem 1rem;
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+}
+
+.dep-name {
+  font-weight: 600;
+  color: #58a6ff;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 0.875rem;
+}
+
+.dep-source {
+  font-size: 0.75rem;
+  color: #7d8590;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  max-width: 60%;
+  text-align: right;
+  word-break: break-all;
+}
+
+/* ========== EXAMPLES ========== */
+.example-block {
+  margin-bottom: 1.25rem;
+  border: 1px solid #30363d;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.example-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background: #1c2024;
+  border-bottom: 1px solid #30363d;
+}
+
+.example-lang {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #e1e4e8;
+  text-transform: capitalize;
+}
+
+.example-file {
+  font-size: 0.7rem;
+  color: #7d8590;
+  font-family: "SFMono-Regular", Consolas, monospace;
+}
+
+.example-code {
+  background: #161b22;
+  padding: 1rem;
+  margin: 0;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: #c9d1d9;
+  overflow-x: auto;
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+/* ========== README ========== */
+.readme-content {
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 8px;
+  padding: 1.25rem;
+  font-size: 0.85rem;
+  line-height: 1.7;
+  color: #c9d1d9;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  max-height: 700px;
+  overflow-y: auto;
+}

@@ -1,0 +1,269 @@
+<section class="catalog">
+  @if (loading) {
+    <div class="loading-spinner">
+      <div class="spinner"></div>
+      <p>Loading modules...</p>
+    </div>
+  }
+
+  @if (error) {
+    <div class="error-banner">
+      <span class="error-icon">!</span>
+      <p>{{ error }}</p>
+    </div>
+  }
+
+  <!-- ============ GRID VIEW ============ -->
+  @if (!loading && !error && !selectedModule) {
+    <div class="catalog-toolbar">
+      <span class="catalog-stats">{{ filteredItems.length }} of {{ items.length }} modules</span>
+      <div class="filter-bar">
+        <button
+          class="filter-btn"
+          [class.active]="activeFilter === 'all'"
+          (click)="setFilter('all')">
+          All
+        </button>
+        @for (cat of categories; track cat) {
+          <button
+            class="filter-btn"
+            [attr.data-category]="cat"
+            [class.active]="activeFilter === cat"
+            (click)="setFilter(cat)">
+            {{ cat }}
+          </button>
+        }
+      </div>
+    </div>
+
+    <div class="module-grid">
+      @for (item of filteredItems; track item.id) {
+        <div class="module-card" role="button" tabindex="0" (click)="selectModule(item)" (keydown.enter)="selectModule(item)">
+          <div class="card-header">
+            <span class="category-badge" [attr.data-category]="item.category">{{ item.category }}</span>
+            <span class="sdk-badge">{{ item.sdk }}</span>
+          </div>
+          <h3 class="module-name">{{ item.name }}</h3>
+          <p class="module-description">{{ item.description }}</p>
+          <div class="card-footer">
+            <span class="version-tag">{{ item.version }}</span>
+            <span class="engine-tag">engine {{ item.engine_version }}</span>
+            @if (item.dependencies.length > 0) {
+              <span class="dep-count">{{ item.dependencies.length }} deps</span>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- ============ DETAIL VIEW ============ -->
+  @if (selectedModule) {
+    <div class="detail-panel">
+      <button class="back-btn" (click)="closeDetail()">&#8592; Back to catalog</button>
+
+      <!-- Header -->
+      <div class="detail-hero">
+        <div class="hero-top">
+          <span class="category-badge lg" [attr.data-category]="selectedModule.category">{{ selectedModule.category }}</span>
+          <span class="version-tag lg">{{ selectedModule.version }}</span>
+        </div>
+        <h2 class="detail-name">{{ selectedModule.name }}</h2>
+        <p class="detail-description">{{ selectedModule.description }}</p>
+
+        <div class="detail-links">
+          <a [href]="selectedModule.github_url" target="_blank" rel="noopener" class="link-btn github-link">GitHub</a>
+          <a [href]="selectedModule.daggerverse_url" target="_blank" rel="noopener" class="link-btn daggerverse-link">Daggerverse</a>
+        </div>
+      </div>
+
+      <!-- Install block -->
+      <div class="install-block">
+        <div class="install-header">
+          <span class="install-label">Use this module</span>
+          <button class="copy-btn" (click)="copyInstall()">
+            {{ copied ? 'Copied!' : 'Copy' }}
+          </button>
+        </div>
+        <pre class="install-code"><code>{{ selectedModule.install_command }}</code></pre>
+      </div>
+
+      <!-- Meta bar -->
+      <div class="detail-meta">
+        <div class="meta-item">
+          <span class="meta-label">SDK</span>
+          <span class="meta-value">{{ selectedModule.sdk }}</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Version</span>
+          <span class="meta-value">{{ selectedModule.version }}</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Engine</span>
+          <span class="meta-value">{{ selectedModule.engine_version }}</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Dependencies</span>
+          <span class="meta-value">{{ selectedModule.dependencies.length }}</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Functions</span>
+          <span class="meta-value">{{ publicFunctions.length }}</span>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tab-bar">
+        <button class="tab-btn" [class.active]="activeTab === 'overview'" (click)="setTab('overview')">Overview</button>
+        <button class="tab-btn" [class.active]="activeTab === 'inputs'" (click)="setTab('inputs')">
+          Functions
+          <span class="tab-count">{{ publicFunctions.length }}</span>
+        </button>
+        @if (selectedModule.dependencies.length > 0) {
+          <button class="tab-btn" [class.active]="activeTab === 'deps'" (click)="setTab('deps')">
+            Dependencies
+            <span class="tab-count">{{ selectedModule.dependencies.length }}</span>
+          </button>
+        }
+        @if (selectedModule.examples.length > 0) {
+          <button class="tab-btn" [class.active]="activeTab === 'examples'" (click)="setTab('examples')">
+            Examples
+            <span class="tab-count">{{ selectedModule.examples.length }}</span>
+          </button>
+        }
+      </div>
+
+      <!-- Tab: Overview -->
+      @if (activeTab === 'overview') {
+        <div class="tab-content">
+          @if (selectedModule.readme) {
+            <pre class="readme-content">{{ selectedModule.readme }}</pre>
+          } @else {
+            <p class="empty-state">No README available for this module.</p>
+          }
+        </div>
+      }
+
+      <!-- Tab: Functions (Inputs) -->
+      @if (activeTab === 'inputs') {
+        <div class="tab-content">
+          @for (fn of publicFunctions; track fn.name) {
+            <div class="fn-card" [class.expanded]="selectedFunction?.name === fn.name">
+              <div class="fn-header" role="button" tabindex="0" (click)="selectFunction(fn)" (keydown.enter)="selectFunction(fn)">
+                <div class="fn-title">
+                  <span class="fn-name">{{ fn.name }}</span>
+                  @if (fn.is_check) {
+                    <span class="fn-badge check-badge">check</span>
+                  }
+                  @if (fn.is_async) {
+                    <span class="fn-badge async-badge">async</span>
+                  }
+                </div>
+                <div class="fn-meta-row">
+                  <span class="fn-return">&#8594; {{ fn.return_type }}</span>
+                  <span class="fn-param-count">{{ fn.params.length }} params</span>
+                  <span class="fn-chevron">{{ selectedFunction?.name === fn.name ? '&#9650;' : '&#9660;' }}</span>
+                </div>
+              </div>
+
+              @if (fn.description && selectedFunction?.name !== fn.name) {
+                <p class="fn-desc-preview">{{ fn.description.split('\n')[0] }}</p>
+              }
+
+              @if (selectedFunction?.name === fn.name) {
+                <div class="fn-detail">
+                  @if (fn.description) {
+                    <p class="fn-description">{{ fn.description }}</p>
+                  }
+
+                  @if (fn.params.length > 0) {
+                    <table class="params-table">
+                      <thead>
+                        <tr>
+                          <th>Argument</th>
+                          <th>Type</th>
+                          <th>Description</th>
+                          <th>Required</th>
+                          <th>Default</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        @for (p of fn.params; track p.name) {
+                          <tr>
+                            <td class="param-name-cell">
+                              <code>{{ formatParamName(p.name) }}</code>
+                            </td>
+                            <td class="param-type-cell">
+                              <code>{{ p.type }}</code>
+                            </td>
+                            <td class="param-desc-cell">{{ p.description }}</td>
+                            <td class="param-req-cell">
+                              @if (p.required) {
+                                <span class="required-badge">required</span>
+                              } @else {
+                                <span class="optional-badge">optional</span>
+                              }
+                            </td>
+                            <td class="param-default-cell">
+                              @if (p.default) {
+                                <code>{{ p.default }}</code>
+                              } @else {
+                                <span class="no-default">-</span>
+                              }
+                            </td>
+                          </tr>
+                        }
+                      </tbody>
+                    </table>
+                  } @else {
+                    <p class="empty-state">This function takes no arguments.</p>
+                  }
+                </div>
+              }
+            </div>
+          }
+
+          @if (publicFunctions.length === 0) {
+            <p class="empty-state">No public functions found in this module.</p>
+          }
+        </div>
+      }
+
+      <!-- Tab: Dependencies -->
+      @if (activeTab === 'deps') {
+        <div class="tab-content">
+          <ul class="dep-list">
+            @for (dep of selectedModule.dependencies; track dep.name) {
+              <li class="dep-item">
+                <span class="dep-name">{{ dep.name }}</span>
+                <span class="dep-source">{{ dep.source }}</span>
+              </li>
+            }
+          </ul>
+        </div>
+      }
+
+      <!-- Tab: Examples -->
+      @if (activeTab === 'examples') {
+        <div class="tab-content">
+          @for (ex of selectedModule.examples; track ex.language) {
+            <div class="example-block">
+              <div class="example-header">
+                <span class="example-lang">{{ ex.language }}</span>
+                <span class="example-file">{{ ex.filename }}</span>
+              </div>
+              <pre class="example-code"><code>{{ ex.code }}</code></pre>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+
+  @if (detailLoading) {
+    <div class="loading-spinner overlay">
+      <div class="spinner"></div>
+      <p>Loading details...</p>
+    </div>
+  }
+</section>
